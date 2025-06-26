@@ -1,25 +1,83 @@
-import { Download } from "lucide-react";
+"use client";
 
+import { Download } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface RichTextNode {
+  type: string;
+  children: { type: string; text: string }[];
+}
+interface AboutData {
+  description: RichTextNode[];
+  frontend: string[];
+  backend: string[];
+  database: string[];
+  cv: { url: string }[];
+}
+console.log("aaaaaaaaaaaa");
 export default function About() {
+  const [about, setAbout] = useState<AboutData | null>(null);
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        console.log("bbbbbbbbbbbb");
+        const res = await fetch("http://localhost:1337/api/about?populate=*");
+        const json = await res.json();
+        const data = json.data;
+        console.log(json);
+        setAbout({
+          description: data.description,
+          frontend: data.frontend,
+          backend: data.backend,
+          database: data.database,
+          cv: data.cv,
+        });
+      } catch (error) {
+        console.error("Failed to fetch about data", error);
+      }
+    };
+    fetchAbout();
+  }, []);
+
+  const renderDescription = () => {
+    return about?.description.map((block, i) => {
+      if (block.type === "paragraph") {
+        return (
+          <p key={i}>
+            {block.children.map((child, j) => (
+              <span key={j}>{child.text}</span>
+            ))}
+          </p>
+        );
+      }
+      return null;
+    });
+  };
+
   return (
     <section className="section" id="about">
       <div className="top-header">
-        <h1>About me</h1>
+        <h1>About Me</h1>
       </div>
       <div className="row">
         <div className="col">
           <div className="about-info">
             <h3>My introduction</h3>
-            <p>
-              I am well-versed in HTML, CSS and JavaScript, and other cutting
-              edge frameworks and libraries, which allows me to implement
-              interactive features. Additionally, I have experience working with
-              content management systems (CMS) like WordPress.
-            </p>
+            <p>{renderDescription()}</p>
             <div className="about-btn">
-              <button className="btn">
-                Download CV <Download className="w-4 h-4 ml-2" />
-              </button>
+              <a
+                className="btn flex items-center"
+                href={
+                  about?.cv?.[0]?.url
+                    ? `http://localhost:1337${about.cv[0].url}`
+                    : "#"
+                }
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download CV <Download className="w-3 h-3 ml-2" />
+              </a>
             </div>
           </div>
         </div>
@@ -30,11 +88,9 @@ export default function About() {
               <h3>Frontend</h3>
             </div>
             <div className="skills-list">
-              <span>HTML</span>
-              <span>CSS</span>
-              <span>Bootstrap</span>
-              <span>JavaScript</span>
-              <span>React</span>
+              {about?.frontend.map((skill, idx) => (
+                <span key={idx}>{skill}</span>
+              ))}
             </div>
           </div>
           <div className="skills-box">
@@ -42,9 +98,9 @@ export default function About() {
               <h3>Backend</h3>
             </div>
             <div className="skills-list">
-              <span>JAVA</span>
-              <span>Python</span>
-              <span>C++</span>
+              {about?.backend.map((skill, idx) => (
+                <span key={idx}>{skill}</span>
+              ))}
             </div>
           </div>
           <div className="skills-box">
@@ -52,7 +108,9 @@ export default function About() {
               <h3>Database</h3>
             </div>
             <div className="skills-list">
-              <span>MySQL</span>
+              {about?.database.map((skill, idx) => (
+                <span key={idx}>{skill}</span>
+              ))}
             </div>
           </div>
         </div>

@@ -3,9 +3,17 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Download } from "lucide-react";
 
+interface HeaderData {
+  name: string;
+  cv: {
+    url: string;
+  }[];
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [headerData, setHeaderData] = useState<HeaderData | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +24,23 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchHeaderData = async () => {
+      try {
+        const res = await fetch("http://localhost:1337/api/header?populate=*");
+        const json = await res.json();
+        const data = json.data;
+        setHeaderData({
+          name: data.Name,
+          cv: data.cv || [],
+        });
+      } catch (err) {
+        console.error("Error fetching header data:", err);
+      }
+    };
+    fetchHeaderData();
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -23,7 +48,7 @@ export default function Header() {
   return (
     <nav id="header" className={`nav ${isScrolled ? "scrolled" : ""}`}>
       <div className="nav-logo">
-        <p className="nav-name">Khang</p>
+        <p className="nav-name">{headerData?.name}</p>
         <span>.</span>
       </div>
 
@@ -73,9 +98,19 @@ export default function Header() {
       </div>
 
       <div className="nav-button">
-        <button className="btn">
-          download CV <Download className="w-4 h-4 ml-2" />
-        </button>
+        <a
+          className="btn flex items-center"
+          href={
+            headerData?.cv?.[0]?.url
+              ? `http://localhost:1337${headerData.cv[0].url}`
+              : "#"
+          }
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Download CV <Download className="w-4 h-4 ml-2" />
+        </a>
       </div>
 
       <div className="nav-menu-btn" onClick={toggleMenu}>

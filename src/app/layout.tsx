@@ -10,7 +10,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolip",
+  title: "Portfolio",
   description: "Khang Nguyen's Portfolio",
 };
 

@@ -5,3 +5,10 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// next.config.js
+module.exports = {
+  images: {
+    domains: ["localhost"], // hoặc tên miền CMS của bạn
+  },
+};
