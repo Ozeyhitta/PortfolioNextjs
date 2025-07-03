@@ -1,40 +1,10 @@
-"use client";
-import { useEffect, useState } from "react";
 import { Instagram, Linkedin, Facebook, Github } from "lucide-react";
 
-interface FooterData {
-  name: string;
-  Github: string;
-  Facebook: string;
-  Instagram: string;
-  Linkedin: string;
-}
-
 export default function Footer() {
-  const [data, setData] = useState<FooterData | null>(null);
-
-  useEffect(() => {
-    const fetchFooterData = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:1337/api/footer?populate=*"
-        ); // Cập nhật URL nếu cần
-        const json = await response.json();
-        setData(json.data);
-      } catch (error) {
-        console.error("Failed to fetch footer data:", error);
-      }
-    };
-
-    fetchFooterData();
-  }, []);
-
-  if (!data) return <footer>Loading...</footer>;
-
   return (
     <footer>
       <div className="top-footer">
-        <p>{data.name}</p>
+        <p>Khang Nguyen</p>
       </div>
       <div className="middle-footer">
         <ul className="footer-menu">
@@ -54,7 +24,7 @@ export default function Footer() {
       </div>
       <div className="footer-social-icons">
         <a
-          href={`https://${data.Instagram}`}
+          href="https://www.instagram.com"
           target="_blank"
           rel="noopener noreferrer"
           className="icon"
@@ -62,7 +32,7 @@ export default function Footer() {
           <Instagram size={20} />
         </a>
         <a
-          href={`https://${data.Linkedin}`}
+          href="https://www.linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
           className="icon"
@@ -70,7 +40,7 @@ export default function Footer() {
           <Linkedin size={20} />
         </a>
         <a
-          href={`https://${data.Facebook}`}
+          href="https://www.facebook.com"
           target="_blank"
           rel="noopener noreferrer"
           className="icon"
@@ -78,7 +48,7 @@ export default function Footer() {
           <Facebook size={20} />
         </a>
         <a
-          href={`https://${data.Github}`}
+          href="https://www.github.com"
           target="_blank"
           rel="noopener noreferrer"
           className="icon"
@@ -88,10 +58,10 @@ export default function Footer() {
       </div>
       <div className="bottom-footer">
         <p>
-          Copyright &copy;{" "}
+          Copyright &copy;
           <a href="#home" style={{ textDecoration: "none" }}>
-            {data.name}
-          </a>{" "}
+            Khang Nguyen
+          </a>
           - All rights reserved
         </p>
       </div>

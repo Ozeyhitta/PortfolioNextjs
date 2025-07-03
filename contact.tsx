@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Mail, Phone, Send } from "lucide-react";
-
-interface ContactInfo {
-  email: string;
-  tel: string;
-}
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -15,25 +10,9 @@ export default function Contact() {
     message: "",
   });
 
-  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
-
-  useEffect(() => {
-    fetch("http://localhost:1337/api/contact?populate=*")
-      .then((res) => res.json())
-      .then((data) => {
-        // ✅ Fix tại đây
-        setContactInfo({
-          email: data.data.email,
-          tel: data.data.tel,
-        });
-      })
-      .catch((err) => {
-        console.error("Không thể fetch thông tin liên hệ:", err);
-      });
-  }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Handle form submission here
     console.log("Form submitted:", formData);
   };
 
@@ -58,21 +37,14 @@ export default function Contact() {
             <h2>
               Find Me <span className="arrow">↘</span>
             </h2>
-            {contactInfo ? (
-              <>
-                <p>
-                  <Mail size={18} /> Email: {contactInfo.email}
-                </p>
-                <p>
-                  <Phone size={18} /> Tel: {contactInfo.tel}
-                </p>
-              </>
-            ) : (
-              <p>Loading...</p>
-            )}
+            <p>
+              <Mail size={18} /> Email: mkhang778@gmail.com
+            </p>
+            <p>
+              <Phone size={18} /> Tel: +84 842 170 204
+            </p>
           </div>
         </div>
-
         <div className="col">
           <form className="form-control" onSubmit={handleSubmit}>
             <div className="form-inputs">
