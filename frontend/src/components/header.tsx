@@ -48,7 +48,7 @@ export default function Header() {
   return (
     <nav id="header" className={`nav ${isScrolled ? "scrolled" : ""}`}>
       <div className="nav-logo">
-        <p className="nav-name">{headerData?.name}</p>
+        <p className="nav-name">{headerData?.name || "..."}</p>
         <span>.</span>
       </div>
 

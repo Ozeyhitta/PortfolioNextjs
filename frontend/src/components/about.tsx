@@ -14,23 +14,23 @@ interface AboutData {
   database: string[];
   cv: { url: string }[];
 }
-console.log("aaaaaaaaaaaa");
+
 export default function About() {
   const [about, setAbout] = useState<AboutData | null>(null);
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        console.log("bbbbbbbbbbbb");
         const res = await fetch("http://localhost:1337/api/about?populate=*");
         const json = await res.json();
+        console.log(json);
         const data = json.data;
         console.log(json);
         setAbout({
-          description: data.description,
-          frontend: data.frontend,
-          backend: data.backend,
-          database: data.database,
-          cv: data.cv,
+          description: data.description || [],
+          frontend: data.frontend || [],
+          backend: data.backend || [],
+          database: data.database || [],
+          cv: data.cv || [],
         });
       } catch (error) {
         console.error("Failed to fetch about data", error);
@@ -40,6 +40,8 @@ export default function About() {
   }, []);
 
   const renderDescription = () => {
+    if (!Array.isArray(about?.description)) return null;
+
     return about?.description.map((block, i) => {
       if (block.type === "paragraph") {
         return (
@@ -63,7 +65,7 @@ export default function About() {
         <div className="col">
           <div className="about-info">
             <h3>My introduction</h3>
-            <p>{renderDescription()}</p>
+            <div>{renderDescription()}</div>
             <div className="about-btn">
               <a
                 className="btn flex items-center"

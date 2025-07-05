@@ -32,15 +32,31 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    // Fetch data from Strapi API
     const fetchHeroData = async () => {
       try {
         const response = await fetch(
           "http://localhost:1337/api/hero?populate=*"
         );
         const { data } = await response.json();
-        setHeroData(data);
-        console.log(data);
+
+        if (!data) return;
+
+        setHeroData({
+          Name: data.Name || "",
+          Description: Array.isArray(data.Description)
+            ? data.Description.map((block: { children: { text: string }[] }) =>
+                block.children
+                  .map((child: { text: string }) => child.text)
+                  .join(" ")
+              ).join(" ")
+            : "",
+          Instagram: data.Instagram || "",
+          LinkedIn: data.LinkedIn || "",
+          Facebook: data.FaceBook || "",
+          github: data.github || "",
+          Avatar: data.Avatar?.[0] || { url: "" },
+          cv: data.cv || [],
+        });
       } catch (error) {
         console.error("Error fetching hero data:", error);
       }
@@ -95,7 +111,7 @@ export default function Hero() {
   if (!isMounted) return null;
 
   if (!heroData || !heroData.Name) return null;
-  console.log(heroData.github);
+
   return (
     <section className="featured-box" id="home">
       <div className="featured-text">

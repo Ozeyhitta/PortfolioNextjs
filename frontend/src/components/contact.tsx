@@ -68,7 +68,7 @@ export default function Contact() {
                 </p>
               </>
             ) : (
-              <p>Loading...</p>
+              <p>chua co thong tin lien he</p>
             )}
           </div>
         </div>
